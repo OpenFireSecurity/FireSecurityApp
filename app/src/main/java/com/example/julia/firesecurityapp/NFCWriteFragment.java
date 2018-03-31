@@ -47,14 +47,14 @@ public class NFCWriteFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mListener = (MainActivity)context;
-        mListener.onDialogDisplayed();
+//        mListener = (MainActivity)context;
+//        mListener.onDialogDisplayed();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener.onDialogDismissed();
+//        mListener.onDialogDismissed();
     }
 
     public void onNfcDetected(Ndef ndef, String messageToWrite){
@@ -65,8 +65,8 @@ public class NFCWriteFragment extends DialogFragment {
 
     private void writeToNfc(Ndef ndef, String message){
 
-        mTvMessage.setText(getString(R.string.message_write_progress));
         if (ndef != null) {
+            mTvMessage.setText(getString(R.string.message_write_progress));
 
             try {
                 ndef.connect();
