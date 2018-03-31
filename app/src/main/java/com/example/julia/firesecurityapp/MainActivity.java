@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -20,16 +21,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.nio.charset.Charset;
+
 public class MainActivity extends AppCompatActivity implements Listener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private EditText mEtMessage;
     private Button mBtWrite;
-    private Button mBtRead;
 
     private NFCWriteFragment mNfcWriteFragment;
-    private NFCReadFragment mNfcReadFragment;
 
     private boolean isDialogDisplayed = false;
     private boolean isWrite = false;
@@ -47,12 +50,9 @@ public class MainActivity extends AppCompatActivity implements Listener {
 
     private void initViews() {
 
-        mEtMessage = (EditText) findViewById(R.id.et_message);
         mBtWrite = (Button) findViewById(R.id.btn_write);
-        mBtRead = (Button) findViewById(R.id.btn_read);
 
         mBtWrite.setOnClickListener(view -> showWriteFragment());
-        mBtRead.setOnClickListener(view -> showReadFragment());
     }
 
     private void initNFC(){
@@ -71,20 +71,6 @@ public class MainActivity extends AppCompatActivity implements Listener {
             mNfcWriteFragment = NFCWriteFragment.newInstance();
         }
         mNfcWriteFragment.show(getFragmentManager(),NFCWriteFragment.TAG);
-
-    }
-
-    private void showReadFragment() {
-
-        isWrite = false;
-
-        mNfcReadFragment = (NFCReadFragment) getFragmentManager().findFragmentByTag(NFCReadFragment.TAG);
-
-        if (mNfcReadFragment == null) {
-
-            mNfcReadFragment = NFCReadFragment.newInstance();
-        }
-        mNfcReadFragment.show(getFragmentManager(),NFCReadFragment.TAG);
 
     }
 
@@ -118,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
     }
 
     private void log (String message) {
-        TextView tv = findViewById(R.id.textView);
+        TextView tv = findViewById(R.id.textView2);
         tv.setText(tv.getText() + "\n" + message);
     }
 
@@ -132,55 +118,68 @@ public class MainActivity extends AppCompatActivity implements Listener {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        log("onNewIntent: " + intent.getAction());
-        log("intent.getAction()==ACTION_TAG_DISCOVERED: " + NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()));
+        super.onNewIntent(intent);
+//        log("intent.getAction()==ACTION_TAG_DISCOVERED: " + NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()));
+//        log("intent.getAction()==ACTION_NDEF_DISCOVERED: " + NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction()));
+//        log("intent.getAction()==ACTION_TECH_DISCOVERED: " + NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction()));
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            log("tag: " + tag.toString());
             Log.d(TAG, "onNewIntent: " + intent.getAction());
+//            log("EXTRA_TAG: " + (intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)!=null));
+//            log("ACTION_ADAPTER_STATE_CHANGED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)!=null));
+//            log("ACTION_NDEF_DISCOVERED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_NDEF_DISCOVERED)!=null));
+//            log("ACTION_TAG_DISCOVERED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_TAG_DISCOVERED)!=null));
+//            log("ACTION_TECH_DISCOVERED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_TECH_DISCOVERED)!=null));
+//            log("EXTRA_NDEF_MESSAGES: " + (intent.getParcelableExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)!=null));
 
             if (tag != null) {
-
-                Parcelable[] msgs =
-                        intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-                log("msgs!=null: " + (msgs!=null));
                 if (isWrite) {
-                    String text = "Fire8";
-                    NdefMessage message = new NdefMessage(
-                            new NdefRecord[]{NdefRecord.createMime(
-                                    "application/vnd.com.example.android.beam", text.getBytes())
-                                    /**
-                                     * The Android Application Record (AAR) is commented out. When a device
-                                     * receives a push with an AAR in it, the application specified in the AAR
-                                     * is guaranteed to run. The AAR overrides the tag dispatch system.
-                                     * You can add it back in to guarantee that this
-                                     * activity starts when receiving a beamed message. For now, this code
-                                     * uses the tag dispatch system.
-                                    */
-                                    //,NdefRecord.createApplicationRecord("com.example.android.beam")
-                            });
-                    // Get an instance of Ndef for the tag.
+                    String text = "{id: \"fire9\", text: \"Датчик пожарной безопасности - уловитель дыма - инвертарный номер 51c33a50-eefe-4bdb-9bcf-2953fcbe2876\", status:1}";
+
+                    log("ndef!=null: " + (Ndef.get(tag) != null));
+                    log("formatable!=null: " + (NdefFormatable.get(tag) != null));
+
+                    try (Ndef ndef = Ndef.get(tag)) {
+                        ndef.connect();
+                        NdefRecord mimeRecord = NdefRecord.createMime("text/plain", text.getBytes(Charset.forName("UTF-8")));
+                        ndef.writeNdefMessage(new NdefMessage(mimeRecord));
+                    } catch (Exception e) {
+                        log(e.getMessage());
+                    }
 
                     try (NdefFormatable formatable = NdefFormatable.get(tag)) {
-                        log("formatable!=null: " + (formatable != null));
                         formatable.connect();
-
-                        try {
-                            formatable.format(message);
-                        } catch (Exception e) {
-                            // let the user know the tag refused to format
-                        }
+                        NdefMessage message = new NdefMessage(
+                                new NdefRecord[]{NdefRecord.createMime(
+                                        "application/vnd.com.example.android.beam", text.getBytes())
+                                });
+                        formatable.format(message);
                     } catch (Exception e) {
-                        // let the user know the tag refused to connect
+                        log(e.getMessage());
                     }
                 }
                 else {
+                    Parcelable[] msgs =
+                            intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+                    log("msgs!=null: " + (msgs!=null));
                     if (msgs != null) {
                         log("msgs.length: " + msgs.length);
                         if (msgs.length > 0) {
                             NdefRecord relayRecord = ((NdefMessage)msgs[0]).getRecords()[0];
                             String nfcData = new String(relayRecord.getPayload());
                             log("message: " + nfcData);
+                            try {
+                                JSONObject data = new JSONObject(nfcData);
+                                String id = data.getString("id");
+                                String text = data.getString("text");
+                                String status = data.getString("status");
+                                TextView tv = findViewById(R.id.textView);
+                                tv.setText(text);
+                                tv.setBackgroundColor(Color.rgb(127, 199, 240));
+
+                            } catch(Exception ex) {
+                                log(ex.getMessage());
+                            }
                         }
                     }
                 }
