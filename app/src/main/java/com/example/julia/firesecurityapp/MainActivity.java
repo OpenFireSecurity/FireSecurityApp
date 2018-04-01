@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
         mBtWrite = (Button) findViewById(R.id.btn_write);
 
         mBtWrite.setOnClickListener(view -> showWriteFragment());
+        mEtMessage = findViewById(R.id.editText);
     }
 
     private void initNFC() {
@@ -96,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements Listener {
     @Override
     protected void onResume() {
         super.onResume();
-        log("onResume");
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         IntentFilter techDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements Listener {
     @Override
     protected void onPause() {
         super.onPause();
-        log("onPause");
         if (mNfcAdapter != null)
             mNfcAdapter.disableForegroundDispatch(this);
     }
@@ -142,18 +141,9 @@ public class MainActivity extends AppCompatActivity implements Listener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-//        log("intent.getAction()==ACTION_TAG_DISCOVERED: " + NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()));
-//        log("intent.getAction()==ACTION_NDEF_DISCOVERED: " + NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction()));
-//        log("intent.getAction()==ACTION_TECH_DISCOVERED: " + NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction()));
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             Log.d(TAG, "onNewIntent: " + intent.getAction());
-//            log("EXTRA_TAG: " + (intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)!=null));
-//            log("ACTION_ADAPTER_STATE_CHANGED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)!=null));
-//            log("ACTION_NDEF_DISCOVERED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_NDEF_DISCOVERED)!=null));
-//            log("ACTION_TAG_DISCOVERED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_TAG_DISCOVERED)!=null));
-//            log("ACTION_TECH_DISCOVERED: " + (intent.getParcelableExtra(NfcAdapter.ACTION_TECH_DISCOVERED)!=null));
-//            log("EXTRA_NDEF_MESSAGES: " + (intent.getParcelableExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)!=null));
 
             if (tag != null) {
                 if (isWrite) {
@@ -161,13 +151,12 @@ public class MainActivity extends AppCompatActivity implements Listener {
                 } else {
                     Parcelable[] msgs =
                             intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-                    log("msgs!=null: " + (msgs != null));
                     if (msgs != null) {
-                        log("msgs.length: " + msgs.length);
+                        log("Receive " + msgs.length + "messages");
                         if (msgs.length > 0) {
                             NdefRecord relayRecord = ((NdefMessage) msgs[0]).getRecords()[0];
                             String nfcData = new String(relayRecord.getPayload());
-                            log("message: " + nfcData);
+                            log("Message: " + nfcData);
                             try {
                                 JSONObject data = new JSONObject(nfcData);
                                 String id = data.getString("id");
@@ -181,9 +170,12 @@ public class MainActivity extends AppCompatActivity implements Listener {
                                 tv.setBackgroundColor(Color.rgb(127, 199, 240));
 
                             } catch (Exception ex) {
-                                log(ex.getMessage());
+                                log("Error while parsing message: " + ex.getMessage());
                             }
                         }
+                    }
+                    else {
+                        log("No messages on sensor");
                     }
                 }
             }
@@ -195,13 +187,15 @@ public class MainActivity extends AppCompatActivity implements Listener {
         try {
             sender = new Sender("192.168.1.227", 50051);
 
-            EditText editText = findViewById(R.id.editText);
-            String comment = editText.getText().toString();
+            String comment = mEtMessage.getText().toString();
 
-            sender.sendVerifierUpdate("verifier@test", sensorid, status, comment);
+            String verifierId = "verifier@test";
+            sender.sendVerifierUpdate(verifierId, sensorid, status, comment);
             Toast.makeText(this, "Сообщение отправлено успешно", Toast.LENGTH_SHORT).show();
+            log("Sending message succeed! verifierId: " + verifierId + ", sensorId: " + sensorid + ", status: " + status + ", comment: " + comment);
+            resetState();
         } catch (Exception e) {
-            log(e.getMessage());
+            log("Error while sending message: " + e.getMessage());
             Toast.makeText(this, "Ошибка при отправке сообщения!", Toast.LENGTH_SHORT).show();
         } finally {
             try {
@@ -209,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
                     sender.shutdown();
                 }
             } catch (InterruptedException e) {
-                log(e.getMessage());
+                log("Error while shutdown sender: " + e.getMessage());
             }
         }
     }
@@ -217,6 +211,8 @@ public class MainActivity extends AppCompatActivity implements Listener {
     private void resetState() {
         TextView tv = findViewById(R.id.textView);
         tv.setText("Приложите устройство к датчику");
-        tv.setBackgroundColor(Color.rgb(127, 199, 240));
+        tv.setBackgroundColor(Color.rgb(255, 187, 51));
+        sensorId = null;
+        mEtMessage.setText("");
     }
 }

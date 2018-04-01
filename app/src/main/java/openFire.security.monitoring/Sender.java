@@ -1,6 +1,7 @@
 package openFire.security.monitoring;
 
 import com.google.protobuf.Empty;
+
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -37,7 +38,7 @@ public class Sender {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public void sendVerifierUpdate(String verifierId, String sensorId, Boolean sensorIsWorking, String status) {
+    public void sendVerifierUpdate(String verifierId, String sensorId, Boolean sensorIsWorking, String status) throws StatusRuntimeException {
         logger.info("Will try to send verifier update...");
         Commands.Command command =
                 Commands.Command.newBuilder().setTransferAsset(
@@ -62,11 +63,7 @@ public class Sender {
                         .build();
         Block.Transaction request = Block.Transaction.newBuilder().setPayload(payload).build();
         Empty response;
-        try {
-            response = blockingStub.torii(request);
-        } catch (StatusRuntimeException e) {
-            logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus().toString());
-        }
+        response = blockingStub.torii(request);
     }
 
     public void sendSensorUpdate(String sensorId, String parameter, Object value) {

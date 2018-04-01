@@ -72,19 +72,17 @@ public class NFCWriteFragment extends DialogFragment {
 
         String text = "{id: \"sensorid@test\", text: \"Датчик пожарной безопасности - уловитель дыма - инвертарный номер 51c33a50-eefe-4bdb-9bcf-2953fcbe2876\", status:1}";
 
-        context.log("ndef!=null: " + (Ndef.get(tag) != null));
-        context.log("formatable!=null: " + (NdefFormatable.get(tag) != null));
-
         try (Ndef ndef = Ndef.get(tag)) {
             if (ndef != null) {
                 ndef.connect();
                 NdefRecord mimeRecord = NdefRecord.createMime("text/plain", text.getBytes(Charset.forName("UTF-8")));
                 ndef.writeNdefMessage(new NdefMessage(mimeRecord));
                 mTvMessage.setText(getString(R.string.message_write_success));
+                context.log("Write to sensor: " + text);
             }
         } catch (Exception e) {
-            context.log(e.getMessage());
             mTvMessage.setText(getString(R.string.message_write_error));
+            context.log("Error while writing to sensor: " + e.getMessage());
         }
 
         try (NdefFormatable formatable = NdefFormatable.get(tag)) {
@@ -96,10 +94,11 @@ public class NFCWriteFragment extends DialogFragment {
                         });
                 formatable.format(message);
                 mTvMessage.setText(getString(R.string.message_write_success));
+                context.log("Write to sensor: " + text);
             }
         } catch (Exception e) {
-            context.log(e.getMessage());
             mTvMessage.setText(getString(R.string.message_write_error));
+            context.log("Error while writing to sensor: " + e.getMessage());
         }
 
         context.isWrite = false;
