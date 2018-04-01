@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
 
     private boolean isDialogDisplayed = false;
     public boolean isWrite = false;
+    private String sensorId;
 
     private NfcAdapter mNfcAdapter;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
         mBtWrite.setOnClickListener(view -> showWriteFragment());
     }
 
-    private void initNFC(){
+    private void initNFC() {
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
     }
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
 
             mNfcWriteFragment = NFCWriteFragment.newInstance();
         }
-        mNfcWriteFragment.show(getFragmentManager(),NFCWriteFragment.TAG);
+        mNfcWriteFragment.show(getFragmentManager(), NFCWriteFragment.TAG);
 
     }
 
@@ -99,16 +100,16 @@ public class MainActivity extends AppCompatActivity implements Listener {
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         IntentFilter techDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
-        IntentFilter[] nfcIntentFilter = new IntentFilter[]{techDetected,tagDetected,ndefDetected};
+        IntentFilter[] nfcIntentFilter = new IntentFilter[]{techDetected, tagDetected, ndefDetected};
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        if(mNfcAdapter!= null)
+        if (mNfcAdapter != null)
             mNfcAdapter.enableForegroundDispatch(this, pendingIntent, nfcIntentFilter, null);
 
     }
 
-    public void log (String message) {
+    public void log(String message) {
         ScrollView sv = findViewById(R.id.scrollView);
         LinearLayout ll = findViewById(R.id.linearLayout);
 
@@ -122,12 +123,20 @@ public class MainActivity extends AppCompatActivity implements Listener {
     protected void onPause() {
         super.onPause();
         log("onPause");
-        if(mNfcAdapter!= null)
+        if (mNfcAdapter != null)
             mNfcAdapter.disableForegroundDispatch(this);
     }
 
     public void onOkClick(View view) {
-        sendBlock();
+        if (sensorId != null) {
+            sendBlock(sensorId, true);
+        }
+    }
+
+    public void onNotOkClick(View view) {
+        if (sensorId != null) {
+            sendBlock(sensorId, false);
+        }
     }
 
     @Override
@@ -149,27 +158,29 @@ public class MainActivity extends AppCompatActivity implements Listener {
             if (tag != null) {
                 if (isWrite) {
                     mNfcWriteFragment.onNfcDetected(tag, this);
-                }
-                else {
+                } else {
                     Parcelable[] msgs =
                             intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-                    log("msgs!=null: " + (msgs!=null));
+                    log("msgs!=null: " + (msgs != null));
                     if (msgs != null) {
                         log("msgs.length: " + msgs.length);
                         if (msgs.length > 0) {
-                            NdefRecord relayRecord = ((NdefMessage)msgs[0]).getRecords()[0];
+                            NdefRecord relayRecord = ((NdefMessage) msgs[0]).getRecords()[0];
                             String nfcData = new String(relayRecord.getPayload());
                             log("message: " + nfcData);
                             try {
                                 JSONObject data = new JSONObject(nfcData);
                                 String id = data.getString("id");
+                                if (id != null) {
+                                    this.sensorId = id;
+                                }
                                 String text = data.getString("text");
                                 String status = data.getString("status");
                                 TextView tv = findViewById(R.id.textView);
                                 tv.setText(text);
                                 tv.setBackgroundColor(Color.rgb(127, 199, 240));
 
-                            } catch(Exception ex) {
+                            } catch (Exception ex) {
                                 log(ex.getMessage());
                             }
                         }
@@ -179,19 +190,20 @@ public class MainActivity extends AppCompatActivity implements Listener {
         }
     }
 
-    private void sendBlock () {
+    private void sendBlock(String sensorid, Boolean status) {
         Sender sender = null;
         try {
             sender = new Sender("192.168.1.227", 50051);
 
-            sender.sendVerifierUpdate("verifier@test", "sensorid@test", true, "Everything is fine");
+            EditText editText = findViewById(R.id.editText);
+            String comment = editText.getText().toString();
+
+            sender.sendVerifierUpdate("verifier@test", sensorid, status, comment);
             Toast.makeText(this, "Сообщение отправлено успешно", Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log(e.getMessage());
             Toast.makeText(this, "Ошибка при отправке сообщения!", Toast.LENGTH_SHORT).show();
-        }
-        finally {
+        } finally {
             try {
                 if (sender != null) {
                     sender.shutdown();
@@ -202,4 +214,9 @@ public class MainActivity extends AppCompatActivity implements Listener {
         }
     }
 
+    private void resetState() {
+        TextView tv = findViewById(R.id.textView);
+        tv.setText("Приложите устройство к датчику");
+        tv.setBackgroundColor(Color.rgb(127, 199, 240));
+    }
 }

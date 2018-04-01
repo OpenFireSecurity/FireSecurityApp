@@ -70,7 +70,7 @@ public class NFCWriteFragment extends DialogFragment {
 
         mTvMessage.setText(getString(R.string.message_write_progress));
 
-        String text = "{id: \"fire9\", text: \"Датчик пожарной безопасности - уловитель дыма - инвертарный номер 51c33a50-eefe-4bdb-9bcf-2953fcbe2876\", status:0}";
+        String text = "{id: \"sensorid@test\", text: \"Датчик пожарной безопасности - уловитель дыма - инвертарный номер 51c33a50-eefe-4bdb-9bcf-2953fcbe2876\", status:1}";
 
         context.log("ndef!=null: " + (Ndef.get(tag) != null));
         context.log("formatable!=null: " + (NdefFormatable.get(tag) != null));
