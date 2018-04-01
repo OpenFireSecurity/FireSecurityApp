@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,8 +106,13 @@ public class MainActivity extends AppCompatActivity implements Listener {
     }
 
     public void log (String message) {
-        TextView tv = findViewById(R.id.textView2);
-        tv.setText(tv.getText() + "\n" + message);
+        ScrollView sv = findViewById(R.id.scrollView);
+        LinearLayout ll = findViewById(R.id.linearLayout);
+
+        TextView tv = new TextView(this);
+        tv.setText(message);
+
+        ll.addView(tv);
     }
 
     @Override
