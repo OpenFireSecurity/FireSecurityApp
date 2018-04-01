@@ -1,4 +1,4 @@
-package iroha.protocol.nano;
+package iroha.protocol;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
@@ -15,8 +15,6 @@ import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-import java.io.IOException;
-
 /**
  */
 @javax.annotation.Generated(
@@ -29,8 +27,6 @@ public final class QueryServiceGrpc {
   public static final String SERVICE_NAME = "iroha.protocol.QueryService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static final int ARG_IN_METHOD_FIND = 0;
-  private static final int ARG_OUT_METHOD_FIND = 1;
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @Deprecated // Use {@link #getFindMethod()} instead.
   public static final io.grpc.MethodDescriptor<Queries.Query,
@@ -57,42 +53,16 @@ public final class QueryServiceGrpc {
               .setFullMethodName(generateFullMethodName(
                   "iroha.protocol.QueryService", "Find"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.nano.NanoUtils.<Queries.Query>marshaller(
-                  new NanoFactory<Queries.Query>(ARG_IN_METHOD_FIND)))
-              .setResponseMarshaller(io.grpc.protobuf.nano.NanoUtils.<Responses.QueryResponse>marshaller(
-                  new NanoFactory<Responses.QueryResponse>(ARG_OUT_METHOD_FIND)))
-              .build();
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Queries.Query.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Responses.QueryResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new QueryServiceMethodDescriptorSupplier("Find"))
+                  .build();
+          }
         }
-      }
-    }
-    return getFindMethod;
-  }
-
-  private static final class NanoFactory<T extends com.google.protobuf.nano.MessageNano>
-      implements io.grpc.protobuf.nano.MessageNanoFactory<T> {
-    private final int id;
-
-    NanoFactory(int id) {
-      this.id = id;
-    }
-
-    @Override
-    public T newInstance() {
-      Object o;
-      switch (id) {
-      case ARG_IN_METHOD_FIND:
-        o = new Queries.Query();
-        break;
-      case ARG_OUT_METHOD_FIND:
-        o = new Responses.QueryResponse();
-        break;
-      default:
-        throw new AssertionError();
-      }
-      @SuppressWarnings("unchecked")
-      T t = (T) o;
-      return t;
-    }
+     }
+     return getFindMethod;
   }
 
   /**
@@ -261,6 +231,41 @@ public final class QueryServiceGrpc {
     }
   }
 
+  private static abstract class QueryServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+    QueryServiceBaseDescriptorSupplier() {}
+
+    @Override
+    public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
+      return Endpoint.getDescriptor();
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.ServiceDescriptor getServiceDescriptor() {
+      return getFileDescriptor().findServiceByName("QueryService");
+    }
+  }
+
+  private static final class QueryServiceFileDescriptorSupplier
+      extends QueryServiceBaseDescriptorSupplier {
+    QueryServiceFileDescriptorSupplier() {}
+  }
+
+  private static final class QueryServiceMethodDescriptorSupplier
+      extends QueryServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
+    private final String methodName;
+
+    QueryServiceMethodDescriptorSupplier(String methodName) {
+      this.methodName = methodName;
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.MethodDescriptor getMethodDescriptor() {
+      return getServiceDescriptor().findMethodByName(methodName);
+    }
+  }
+
   private static volatile io.grpc.ServiceDescriptor serviceDescriptor;
 
   public static io.grpc.ServiceDescriptor getServiceDescriptor() {
@@ -270,6 +275,7 @@ public final class QueryServiceGrpc {
         result = serviceDescriptor;
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new QueryServiceFileDescriptorSupplier())
               .addMethod(getFindMethodHelper())
               .build();
         }

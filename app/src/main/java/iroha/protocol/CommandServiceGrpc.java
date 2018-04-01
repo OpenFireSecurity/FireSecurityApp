@@ -1,4 +1,4 @@
-package iroha.protocol.nano;
+package iroha.protocol;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
@@ -15,8 +15,6 @@ import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-import java.io.IOException;
-
 /**
  */
 @javax.annotation.Generated(
@@ -29,158 +27,116 @@ public final class CommandServiceGrpc {
   public static final String SERVICE_NAME = "iroha.protocol.CommandService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static final int ARG_IN_METHOD_TORII = 0;
-  private static final int ARG_OUT_METHOD_TORII = 1;
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @Deprecated // Use {@link #getToriiMethod()} instead.
   public static final io.grpc.MethodDescriptor<Block.Transaction,
-      com.google.protobuf.nano.Empty> METHOD_TORII = getToriiMethodHelper();
+      com.google.protobuf.Empty> METHOD_TORII = getToriiMethodHelper();
 
   private static volatile io.grpc.MethodDescriptor<Block.Transaction,
-      com.google.protobuf.nano.Empty> getToriiMethod;
+      com.google.protobuf.Empty> getToriiMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static io.grpc.MethodDescriptor<Block.Transaction,
-      com.google.protobuf.nano.Empty> getToriiMethod() {
+      com.google.protobuf.Empty> getToriiMethod() {
     return getToriiMethodHelper();
   }
 
   private static io.grpc.MethodDescriptor<Block.Transaction,
-      com.google.protobuf.nano.Empty> getToriiMethodHelper() {
-    io.grpc.MethodDescriptor<Block.Transaction, com.google.protobuf.nano.Empty> getToriiMethod;
+      com.google.protobuf.Empty> getToriiMethodHelper() {
+    io.grpc.MethodDescriptor<Block.Transaction, com.google.protobuf.Empty> getToriiMethod;
     if ((getToriiMethod = CommandServiceGrpc.getToriiMethod) == null) {
       synchronized (CommandServiceGrpc.class) {
         if ((getToriiMethod = CommandServiceGrpc.getToriiMethod) == null) {
           CommandServiceGrpc.getToriiMethod = getToriiMethod = 
-              io.grpc.MethodDescriptor.<Block.Transaction, com.google.protobuf.nano.Empty>newBuilder()
+              io.grpc.MethodDescriptor.<Block.Transaction, com.google.protobuf.Empty>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "iroha.protocol.CommandService", "Torii"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.nano.NanoUtils.<Block.Transaction>marshaller(
-                  new NanoFactory<Block.Transaction>(ARG_IN_METHOD_TORII)))
-              .setResponseMarshaller(io.grpc.protobuf.nano.NanoUtils.<com.google.protobuf.nano.Empty>marshaller(
-                  new NanoFactory<com.google.protobuf.nano.Empty>(ARG_OUT_METHOD_TORII)))
-              .build();
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Block.Transaction.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+                  .setSchemaDescriptor(new CommandServiceMethodDescriptorSupplier("Torii"))
+                  .build();
+          }
         }
-      }
-    }
-    return getToriiMethod;
+     }
+     return getToriiMethod;
   }
-  private static final int ARG_IN_METHOD_STATUS = 2;
-  private static final int ARG_OUT_METHOD_STATUS = 3;
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @Deprecated // Use {@link #getStatusMethod()} instead.
-  public static final io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> METHOD_STATUS = getStatusMethodHelper();
+  public static final io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> METHOD_STATUS = getStatusMethodHelper();
 
-  private static volatile io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> getStatusMethod;
+  private static volatile io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> getStatusMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> getStatusMethod() {
+  public static io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> getStatusMethod() {
     return getStatusMethodHelper();
   }
 
-  private static io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> getStatusMethodHelper() {
-    io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest, iroha.protocol.nano.Endpoint.ToriiResponse> getStatusMethod;
+  private static io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> getStatusMethodHelper() {
+    io.grpc.MethodDescriptor<Endpoint.TxStatusRequest, Endpoint.ToriiResponse> getStatusMethod;
     if ((getStatusMethod = CommandServiceGrpc.getStatusMethod) == null) {
       synchronized (CommandServiceGrpc.class) {
         if ((getStatusMethod = CommandServiceGrpc.getStatusMethod) == null) {
           CommandServiceGrpc.getStatusMethod = getStatusMethod = 
-              io.grpc.MethodDescriptor.<iroha.protocol.nano.Endpoint.TxStatusRequest, iroha.protocol.nano.Endpoint.ToriiResponse>newBuilder()
+              io.grpc.MethodDescriptor.<Endpoint.TxStatusRequest, Endpoint.ToriiResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "iroha.protocol.CommandService", "Status"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.nano.NanoUtils.<iroha.protocol.nano.Endpoint.TxStatusRequest>marshaller(
-                  new NanoFactory<iroha.protocol.nano.Endpoint.TxStatusRequest>(ARG_IN_METHOD_STATUS)))
-              .setResponseMarshaller(io.grpc.protobuf.nano.NanoUtils.<iroha.protocol.nano.Endpoint.ToriiResponse>marshaller(
-                  new NanoFactory<iroha.protocol.nano.Endpoint.ToriiResponse>(ARG_OUT_METHOD_STATUS)))
-              .build();
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Endpoint.TxStatusRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Endpoint.ToriiResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new CommandServiceMethodDescriptorSupplier("Status"))
+                  .build();
+          }
         }
-      }
-    }
-    return getStatusMethod;
+     }
+     return getStatusMethod;
   }
-  private static final int ARG_IN_METHOD_STATUS_STREAM = 4;
-  private static final int ARG_OUT_METHOD_STATUS_STREAM = 5;
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @Deprecated // Use {@link #getStatusStreamMethod()} instead.
-  public static final io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> METHOD_STATUS_STREAM = getStatusStreamMethodHelper();
+  public static final io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> METHOD_STATUS_STREAM = getStatusStreamMethodHelper();
 
-  private static volatile io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> getStatusStreamMethod;
+  private static volatile io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> getStatusStreamMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> getStatusStreamMethod() {
+  public static io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> getStatusStreamMethod() {
     return getStatusStreamMethodHelper();
   }
 
-  private static io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest,
-      iroha.protocol.nano.Endpoint.ToriiResponse> getStatusStreamMethodHelper() {
-    io.grpc.MethodDescriptor<iroha.protocol.nano.Endpoint.TxStatusRequest, iroha.protocol.nano.Endpoint.ToriiResponse> getStatusStreamMethod;
+  private static io.grpc.MethodDescriptor<Endpoint.TxStatusRequest,
+      Endpoint.ToriiResponse> getStatusStreamMethodHelper() {
+    io.grpc.MethodDescriptor<Endpoint.TxStatusRequest, Endpoint.ToriiResponse> getStatusStreamMethod;
     if ((getStatusStreamMethod = CommandServiceGrpc.getStatusStreamMethod) == null) {
       synchronized (CommandServiceGrpc.class) {
         if ((getStatusStreamMethod = CommandServiceGrpc.getStatusStreamMethod) == null) {
           CommandServiceGrpc.getStatusStreamMethod = getStatusStreamMethod = 
-              io.grpc.MethodDescriptor.<iroha.protocol.nano.Endpoint.TxStatusRequest, iroha.protocol.nano.Endpoint.ToriiResponse>newBuilder()
+              io.grpc.MethodDescriptor.<Endpoint.TxStatusRequest, Endpoint.ToriiResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(
                   "iroha.protocol.CommandService", "StatusStream"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.nano.NanoUtils.<iroha.protocol.nano.Endpoint.TxStatusRequest>marshaller(
-                  new NanoFactory<iroha.protocol.nano.Endpoint.TxStatusRequest>(ARG_IN_METHOD_STATUS_STREAM)))
-              .setResponseMarshaller(io.grpc.protobuf.nano.NanoUtils.<iroha.protocol.nano.Endpoint.ToriiResponse>marshaller(
-                  new NanoFactory<iroha.protocol.nano.Endpoint.ToriiResponse>(ARG_OUT_METHOD_STATUS_STREAM)))
-              .build();
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Endpoint.TxStatusRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  Endpoint.ToriiResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new CommandServiceMethodDescriptorSupplier("StatusStream"))
+                  .build();
+          }
         }
-      }
-    }
-    return getStatusStreamMethod;
-  }
-
-  private static final class NanoFactory<T extends com.google.protobuf.nano.MessageNano>
-      implements io.grpc.protobuf.nano.MessageNanoFactory<T> {
-    private final int id;
-
-    NanoFactory(int id) {
-      this.id = id;
-    }
-
-    @Override
-    public T newInstance() {
-      Object o;
-      switch (id) {
-      case ARG_IN_METHOD_TORII:
-        o = new Block.Transaction();
-        break;
-      case ARG_OUT_METHOD_TORII:
-        o = new com.google.protobuf.nano.Empty();
-        break;
-      case ARG_IN_METHOD_STATUS:
-        o = new iroha.protocol.nano.Endpoint.TxStatusRequest();
-        break;
-      case ARG_OUT_METHOD_STATUS:
-        o = new iroha.protocol.nano.Endpoint.ToriiResponse();
-        break;
-      case ARG_IN_METHOD_STATUS_STREAM:
-        o = new iroha.protocol.nano.Endpoint.TxStatusRequest();
-        break;
-      case ARG_OUT_METHOD_STATUS_STREAM:
-        o = new iroha.protocol.nano.Endpoint.ToriiResponse();
-        break;
-      default:
-        throw new AssertionError();
-      }
-      @SuppressWarnings("unchecked")
-      T t = (T) o;
-      return t;
-    }
+     }
+     return getStatusStreamMethod;
   }
 
   /**
@@ -213,21 +169,21 @@ public final class CommandServiceGrpc {
     /**
      */
     public void torii(Block.Transaction request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.nano.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       asyncUnimplementedUnaryCall(getToriiMethodHelper(), responseObserver);
     }
 
     /**
      */
-    public void status(iroha.protocol.nano.Endpoint.TxStatusRequest request,
-        io.grpc.stub.StreamObserver<iroha.protocol.nano.Endpoint.ToriiResponse> responseObserver) {
+    public void status(Endpoint.TxStatusRequest request,
+        io.grpc.stub.StreamObserver<Endpoint.ToriiResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getStatusMethodHelper(), responseObserver);
     }
 
     /**
      */
-    public void statusStream(iroha.protocol.nano.Endpoint.TxStatusRequest request,
-        io.grpc.stub.StreamObserver<iroha.protocol.nano.Endpoint.ToriiResponse> responseObserver) {
+    public void statusStream(Endpoint.TxStatusRequest request,
+        io.grpc.stub.StreamObserver<Endpoint.ToriiResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getStatusStreamMethodHelper(), responseObserver);
     }
 
@@ -238,21 +194,21 @@ public final class CommandServiceGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 Block.Transaction,
-                com.google.protobuf.nano.Empty>(
+                com.google.protobuf.Empty>(
                   this, METHODID_TORII)))
           .addMethod(
             getStatusMethodHelper(),
             asyncUnaryCall(
               new MethodHandlers<
-                iroha.protocol.nano.Endpoint.TxStatusRequest,
-                iroha.protocol.nano.Endpoint.ToriiResponse>(
+                Endpoint.TxStatusRequest,
+                Endpoint.ToriiResponse>(
                   this, METHODID_STATUS)))
           .addMethod(
             getStatusStreamMethodHelper(),
             asyncServerStreamingCall(
               new MethodHandlers<
-                iroha.protocol.nano.Endpoint.TxStatusRequest,
-                iroha.protocol.nano.Endpoint.ToriiResponse>(
+                Endpoint.TxStatusRequest,
+                Endpoint.ToriiResponse>(
                   this, METHODID_STATUS_STREAM)))
           .build();
     }
@@ -279,23 +235,23 @@ public final class CommandServiceGrpc {
     /**
      */
     public void torii(Block.Transaction request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.nano.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getToriiMethodHelper(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void status(iroha.protocol.nano.Endpoint.TxStatusRequest request,
-        io.grpc.stub.StreamObserver<iroha.protocol.nano.Endpoint.ToriiResponse> responseObserver) {
+    public void status(Endpoint.TxStatusRequest request,
+        io.grpc.stub.StreamObserver<Endpoint.ToriiResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getStatusMethodHelper(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void statusStream(iroha.protocol.nano.Endpoint.TxStatusRequest request,
-        io.grpc.stub.StreamObserver<iroha.protocol.nano.Endpoint.ToriiResponse> responseObserver) {
+    public void statusStream(Endpoint.TxStatusRequest request,
+        io.grpc.stub.StreamObserver<Endpoint.ToriiResponse> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(getStatusStreamMethodHelper(), getCallOptions()), request, responseObserver);
     }
@@ -321,22 +277,22 @@ public final class CommandServiceGrpc {
 
     /**
      */
-    public com.google.protobuf.nano.Empty torii(Block.Transaction request) {
+    public com.google.protobuf.Empty torii(Block.Transaction request) {
       return blockingUnaryCall(
           getChannel(), getToriiMethodHelper(), getCallOptions(), request);
     }
 
     /**
      */
-    public iroha.protocol.nano.Endpoint.ToriiResponse status(iroha.protocol.nano.Endpoint.TxStatusRequest request) {
+    public Endpoint.ToriiResponse status(Endpoint.TxStatusRequest request) {
       return blockingUnaryCall(
           getChannel(), getStatusMethodHelper(), getCallOptions(), request);
     }
 
     /**
      */
-    public java.util.Iterator<iroha.protocol.nano.Endpoint.ToriiResponse> statusStream(
-        iroha.protocol.nano.Endpoint.TxStatusRequest request) {
+    public java.util.Iterator<Endpoint.ToriiResponse> statusStream(
+        Endpoint.TxStatusRequest request) {
       return blockingServerStreamingCall(
           getChannel(), getStatusStreamMethodHelper(), getCallOptions(), request);
     }
@@ -362,7 +318,7 @@ public final class CommandServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.nano.Empty> torii(
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> torii(
         Block.Transaction request) {
       return futureUnaryCall(
           getChannel().newCall(getToriiMethodHelper(), getCallOptions()), request);
@@ -370,8 +326,8 @@ public final class CommandServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<iroha.protocol.nano.Endpoint.ToriiResponse> status(
-        iroha.protocol.nano.Endpoint.TxStatusRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<Endpoint.ToriiResponse> status(
+        Endpoint.TxStatusRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getStatusMethodHelper(), getCallOptions()), request);
     }
@@ -400,15 +356,15 @@ public final class CommandServiceGrpc {
       switch (methodId) {
         case METHODID_TORII:
           serviceImpl.torii((Block.Transaction) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.nano.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         case METHODID_STATUS:
-          serviceImpl.status((iroha.protocol.nano.Endpoint.TxStatusRequest) request,
-              (io.grpc.stub.StreamObserver<iroha.protocol.nano.Endpoint.ToriiResponse>) responseObserver);
+          serviceImpl.status((Endpoint.TxStatusRequest) request,
+              (io.grpc.stub.StreamObserver<Endpoint.ToriiResponse>) responseObserver);
           break;
         case METHODID_STATUS_STREAM:
-          serviceImpl.statusStream((iroha.protocol.nano.Endpoint.TxStatusRequest) request,
-              (io.grpc.stub.StreamObserver<iroha.protocol.nano.Endpoint.ToriiResponse>) responseObserver);
+          serviceImpl.statusStream((Endpoint.TxStatusRequest) request,
+              (io.grpc.stub.StreamObserver<Endpoint.ToriiResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -426,6 +382,41 @@ public final class CommandServiceGrpc {
     }
   }
 
+  private static abstract class CommandServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+    CommandServiceBaseDescriptorSupplier() {}
+
+    @Override
+    public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
+      return Endpoint.getDescriptor();
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.ServiceDescriptor getServiceDescriptor() {
+      return getFileDescriptor().findServiceByName("CommandService");
+    }
+  }
+
+  private static final class CommandServiceFileDescriptorSupplier
+      extends CommandServiceBaseDescriptorSupplier {
+    CommandServiceFileDescriptorSupplier() {}
+  }
+
+  private static final class CommandServiceMethodDescriptorSupplier
+      extends CommandServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
+    private final String methodName;
+
+    CommandServiceMethodDescriptorSupplier(String methodName) {
+      this.methodName = methodName;
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.MethodDescriptor getMethodDescriptor() {
+      return getServiceDescriptor().findMethodByName(methodName);
+    }
+  }
+
   private static volatile io.grpc.ServiceDescriptor serviceDescriptor;
 
   public static io.grpc.ServiceDescriptor getServiceDescriptor() {
@@ -435,6 +426,7 @@ public final class CommandServiceGrpc {
         result = serviceDescriptor;
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new CommandServiceFileDescriptorSupplier())
               .addMethod(getToriiMethodHelper())
               .addMethod(getStatusMethodHelper())
               .addMethod(getStatusStreamMethodHelper())

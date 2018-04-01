@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +27,8 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+
+import openFire.security.monitoring.Sender;
 
 public class MainActivity extends AppCompatActivity implements Listener {
 
@@ -123,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements Listener {
             mNfcAdapter.disableForegroundDispatch(this);
     }
 
+    public void onOkClick(View view) {
+        sendBlock();
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -168,6 +175,29 @@ public class MainActivity extends AppCompatActivity implements Listener {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void sendBlock () {
+        Sender sender = null;
+        try {
+            sender = new Sender("192.168.1.227", 50051);
+
+            sender.sendVerifierUpdate("verifier@test", "sensorid@test", true, "Everything is fine");
+            Toast.makeText(this, "Сообщение отправлено успешно", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception e) {
+            log(e.getMessage());
+            Toast.makeText(this, "Ошибка при отправке сообщения!", Toast.LENGTH_SHORT).show();
+        }
+        finally {
+            try {
+                if (sender != null) {
+                    sender.shutdown();
+                }
+            } catch (InterruptedException e) {
+                log(e.getMessage());
             }
         }
     }
