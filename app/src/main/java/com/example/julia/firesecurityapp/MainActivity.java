@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
     private NFCWriteFragment mNfcWriteFragment;
 
     private boolean isDialogDisplayed = false;
-    private boolean isWrite = false;
+    public boolean isWrite = false;
 
     private NfcAdapter mNfcAdapter;
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
 
     }
 
-    private void log (String message) {
+    public void log (String message) {
         TextView tv = findViewById(R.id.textView2);
         tv.setText(tv.getText() + "\n" + message);
     }
@@ -134,29 +134,7 @@ public class MainActivity extends AppCompatActivity implements Listener {
 
             if (tag != null) {
                 if (isWrite) {
-                    String text = "{id: \"fire9\", text: \"Датчик пожарной безопасности - уловитель дыма - инвертарный номер 51c33a50-eefe-4bdb-9bcf-2953fcbe2876\", status:1}";
-
-                    log("ndef!=null: " + (Ndef.get(tag) != null));
-                    log("formatable!=null: " + (NdefFormatable.get(tag) != null));
-
-                    try (Ndef ndef = Ndef.get(tag)) {
-                        ndef.connect();
-                        NdefRecord mimeRecord = NdefRecord.createMime("text/plain", text.getBytes(Charset.forName("UTF-8")));
-                        ndef.writeNdefMessage(new NdefMessage(mimeRecord));
-                    } catch (Exception e) {
-                        log(e.getMessage());
-                    }
-
-                    try (NdefFormatable formatable = NdefFormatable.get(tag)) {
-                        formatable.connect();
-                        NdefMessage message = new NdefMessage(
-                                new NdefRecord[]{NdefRecord.createMime(
-                                        "application/vnd.com.example.android.beam", text.getBytes())
-                                });
-                        formatable.format(message);
-                    } catch (Exception e) {
-                        log(e.getMessage());
-                    }
+                    mNfcWriteFragment.onNfcDetected(tag, this);
                 }
                 else {
                     Parcelable[] msgs =
@@ -183,44 +161,6 @@ public class MainActivity extends AppCompatActivity implements Listener {
                         }
                     }
                 }
-//                Ndef ndef = Ndef.get(tag); // Enable I/O
-//                log("ndef!=null: " + (ndef!=null));
-//                try {
-//                    ndef.connect(); // Write the message
-//                    ndef.writeNdefMessage(message); // Close the connection
-//                    ndef.close();
-//                }
-//                catch(Exception ex) {
-//                    log(ex.getMessage());
-//                }
-//                log("msgs length: " + msgs.length);
-//                NdefRecord firstRecord = ((NdefMessage)msgs[0]).getRecords()[0];
-//                byte[] payload = firstRecord.getPayload();
-//                int payloadLength = payload.length;
-//                int langLength = payload[0];
-//                int textLength = payloadLength - langLength - 1;
-//                byte[] text = new byte[textLength];
-//                System.arraycopy(payload, 1+langLength, text, 0, textLength);
-//                log("MESSAGE: " + new String(text));
-
-//                Ndef ndef = Ndef.get(tag);
-//                String text = getString(R.string.message_tag_detected) + ", ndef!=null: " + (ndef != null);
-//                Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-//
-////            if (isDialogDisplayed) {
-////
-//                if (isWrite) {
-//
-//                    String messageToWrite = mEtMessage.getText().toString();
-//                    mNfcWriteFragment = (NFCWriteFragment) getFragmentManager().findFragmentByTag(NFCWriteFragment.TAG);
-//                    mNfcWriteFragment.onNfcDetected(ndef, messageToWrite);
-//
-//                } else {
-//
-//                    mNfcReadFragment = (NFCReadFragment) getFragmentManager().findFragmentByTag(NFCReadFragment.TAG);
-//                    mNfcReadFragment.onNfcDetected(ndef);
-//                }
-//            }
             }
         }
     }
